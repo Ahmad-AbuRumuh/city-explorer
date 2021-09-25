@@ -1,18 +1,21 @@
 import React from 'react';
 import axios from 'axios';
+import Weather from './component/Weather.js';
 import Card from 'react-bootstrap/Card'
 import ListGroup from 'react-bootstrap/ListGroup'
-import Form from 'react-bootstrap/Form'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Form from 'react-bootstrap/Form'
+
 class App extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      locationResult: {},
+      locationResult: [],
       searchQuery: '',
       showLocInfo: false,
-      showError: false
+      showError: false,
+      weatherResult: []
     }
   }
 
@@ -33,7 +36,26 @@ class App extends React.Component {
         showLocInfo: true,
         showError:false
       })
-    } catch {
+    } 
+    catch {
+      this.setState({
+        showError: true,
+        showLocInfo:false
+      })
+    }
+
+    try {
+      let reqUrl = `http://localhost:3001/weather?nameOfCity=${this.state.searchQuery}`;
+
+      let weaResult = await axios.get(reqUrl);
+
+      this.setState({
+        weatherResult: weaResult.data,
+        showLocInfo: true,
+        showError:false
+      })
+    }
+    catch {
       this.setState({
         showError: true,
         showLocInfo:false
@@ -62,6 +84,12 @@ class App extends React.Component {
               <ListGroup.Item>{this.state.searchQuery}</ListGroup.Item>
               <ListGroup.Item>{this.state.locationResult.lat}</ListGroup.Item>
               <ListGroup.Item>{this.state.locationResult.lon}</ListGroup.Item>
+              {this.state.weatherResult.map(info => {
+              return (
+                <ListGroup.Item>
+              <Weather weatherResult={info} />
+            </ListGroup.Item>
+              )})} 
             </ListGroup>
           </Card>
         }
