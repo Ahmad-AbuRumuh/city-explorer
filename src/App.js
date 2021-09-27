@@ -30,7 +30,7 @@ class App extends React.Component {
       let reqUrl = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&q=${this.state.searchQuery}&format=json`;
 
       let locResult = await axios.get(reqUrl);
-        console.log(locResult)
+      console.log(locResult)
       this.setState({
         locationResult: locResult.data[0],
         showLocInfo: true,
@@ -45,10 +45,9 @@ class App extends React.Component {
     }
 
     try {
-      let reqUrl = `http://localhost:3001/weather?nameOfCity=${this.state.searchQuery}`;
+      let reqUrl = `${process.env.REACT_APP_SERVER}/weather?nameOfCity=${this.state.searchQuery}`;
 
       let weaResult = await axios.get(reqUrl);
-
       this.setState({
         weatherResult: weaResult.data,
         showLocInfo: true,
